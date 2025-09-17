@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>CREAS Sousa-PB (Gerônima Marques) – Registro de Procedimentos</title>
+  <style>
+    :root{--bg:#0b1220;--card:#121a2b;--muted:#94a3b8;--brand:#8b5cf6;--brand-2:#10b981;--text:#e2e8f0}
+    body{margin:0;background:linear-gradient(180deg,var(--bg),#0f172a);color:var(--text);font:16px/1.5 system-ui}
+    header{position:sticky;top:0;z-index:10;background:rgba(11,18,32,.85);border-bottom:1px solid rgba(148,163,184,.15);backdrop-filter:blur(6px)}
+    .wrap{max-width:1160px;margin:0 auto;padding:16px}
+    h1{margin:0;font-size:1.1rem;display:flex;gap:10px;align-items:center}
+    @media(min-width:700px){h1{font-size:1.5rem}}
+    .badge{font-size:.72rem;color:#0f172a;background:linear-gradient(135deg,var(--brand),var(--brand-2));padding:2px 10px;border-radius:999px;white-space:nowrap}
+    nav[role=tablist]{margin-top:10px;display:flex;gap:8px;overflow:auto;padding-bottom:6px;scroll-snap-type:x proximity}
+    .tab{scroll-snap-align:start;flex:0 0 auto;border:1px solid rgba(148,163,184,.25);background:var(--card);padding:10px 14px;border-radius:12px;cursor:pointer;min-width:120px;text-align:center;touch-action:manipulation}
+    .tab:focus{outline:2px solid rgba(139,92,246,.6);outline-offset:2px}
+    .tab.active{background:linear-gradient(135deg,rgba(139,92,246,.25),rgba(16,185,129,.25));border-color:transparent}
+    main{padding:16px}
+    @media(min-width:900px){main{padding:24px 0}}
+    .grid{display:grid;gap:16px}
+    @media(min-width:900px){.grid{grid-template-columns:1.1fr .9fr}}
+    .card{background:var(--card);border:1px solid rgba(148,163,184,.15);border-radius:16px;padding:16px}
+    label{display:block;font-size:.9rem;color:var(--muted);margin-bottom:6px}
+    input,textarea,select{width:100%;background:#0b1324;color:var(--text);border:1px solid rgba(148,163,184,.25);border-radius:10px;padding:12px}
+    textarea{min-height:120px;resize:vertical}
+    .btns{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
+    .btn{border:0;border-radius:12px;padding:12px 16px;font-weight:700;cursor:pointer}
+    .btn.primary{background:linear-gradient(135deg,var(--brand),var(--brand-2));color:#0b1220}
+    .btn.ghost{background:transparent;border:1px solid rgba(148,163,184,.3);color:var(--text)}
+    section[role=tabpanel]{display:none}
+    section[role=tabpanel].active{display:block}
+    table{width:100%;border-collapse:collapse}
+    th,td{padding:10px;border-bottom:1px dashed rgba(148,163,184,.2);text-align:left}
+    .footer{color:var(--muted);text-align:center;padding:18px}
+    /* IA */
+    .ai-box{background:#0b1324;border:1px solid rgba(148,163,184,.3);border-radius:14px;padding:12px;margin-top:12px}
+    .tags{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0}
+    .tag{background:rgba(139,92,246,.15);border:1px solid rgba(139,92,246,.35);padding:3px 8px;border-radius:999px;font-size:.8rem}
+    .risk{font-weight:700}
+  </style>
+</head>
+<body>
+  <header>
+    <div class="wrap">
+      <h1>
+        <img src="https://upload.wikimedia.org/wikipedia/commons/0/0c/Bras%C3%A3o_de_Sousa%2C_Para%C3%ADba.png" alt="Brasão de Sousa" style="height:32px"> 
+        CREAS Sousa-PB <span class="badge">Gerônima Marques</span>
+      </h1>
+      <nav role="tablist" aria-label="Seções do sistema">
+        <button class="tab active" role="tab" aria-selected="true" aria-controls="tab-cad" data-tab="cad">Cadastro</button>
+        <button class="tab" role="tab" aria-selected="false" aria-controls="tab-lista" data-tab="lista">Registros</button>
+        <button class="tab" role="tab" aria-selected="false" aria-controls="tab-graficos" data-tab="graficos">Infográfico</button>
+        <button class="tab" role="tab" aria-selected="false" aria-controls="tab-agenda" data-tab="agenda">Agenda</button>
+        <button class="tab" role="tab" aria-selected="false" aria-controls="tab-config" data-tab="config">Backup</button>
+      </nav>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <!-- CADASTRO -->
+    <section id="tab-cad" role="tabpanel" tabindex="0" class="grid active">
+      <div class="card">
+        <h2>Novo Procedimento</h2>
+        <label>Nº do Procedimento</label>
+        <input type="text" id="numProc" readonly value="CREAS-SOUSA-2025-0001">
+        <label>Data</label>
+        <input type="date" id="dataRegistro">
+        <label>Usuário(a)</label>
+        <input type="text" id="nomeUsuario" placeholder="Nome completo">
+        <label>Profissional</label>
+        <input type="text" id="nomeProf" placeholder="Profissional responsável">
+        <label>Serviço/Setor</label>
+        <select id="setor"><option>Acolhimento</option><option>Psicossocial</option><option>Orientação Jurídica</option></select>
+        <label>Próximo Atendimento</label>
+        <input type="datetime-local" id="proxAtend">
+        <label>Violações</label>
+        <div id="violacoes"></div>
+        <label>Relatório</label>
+        <textarea id="relatorio" placeholder="Relato objetivo do atendimento..."></textarea>
+
+        <!-- IA Assistente de Identificação -->
+        <div class="ai-box" id="aiBox">
+          <strong>Assistente IA – Identificação de Relatos</strong>
+          <p style="margin:6px 0 8px 0;color:var(--muted)">Sugere possíveis violações, risco e encaminhamentos com base no texto do relatório. <br>Modo: <span id="aiMode">Local (heurístico)</span></p>
+          <div class="btns">
+            <button class="btn ghost" type="button" id="btnIA">Analisar relato (IA)</button>
+            <button class="btn ghost" type="button" id="btnIAAplicar" disabled>Aplicar sugestões</button>
+          </div>
+          <div id="iaSugestoes" style="margin-top:8px"></div>
+        </div>
+
+        <label>Anexos</label>
+        <input type="file" id="anexos" multiple>
+        <div class="btns">
+          <button class="btn primary" type="button" id="btnSalvar">Salvar</button>
+          <button class="btn ghost" type="button" id="btnLimpar">Limpar</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- LISTA -->
+    <section id="tab-lista" role="tabpanel" tabindex="0" class="grid">
+      <div class="card">
+        <h2>Registros</h2>
+        <div class="btns">
+          <button class="btn ghost" type="button" id="btnAtualizarLista">Atualizar</button>
+        </div>
+        <table>
+          <thead><tr><th>Nº</th><th>Data</th><th>Usuário</th><th>Profissional</th></tr></thead>
+          <tbody id="tbodyRegistros"><tr><td colspan="4">Sem dados ainda.</td></tr></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- GRÁFICOS -->
+    <section id="tab-graficos" role="tabpanel" tabindex="0" class="grid">
+      <div class="card">
+        <h2>Infográfico</h2>
+        <p>Quando os registros forem salvos, os gráficos aparecerão aqui.</p>
+      </div>
+    </section>
+
+    <!-- AGENDA -->
+    <section id="tab-agenda" role="tabpanel" tabindex="0" class="grid">
+      <div class="card">
+        <h2>Agenda</h2>
+        <table>
+          <thead><tr><th>Data/Hora</th><th>Procedimento</th><th>Usuário</th></tr></thead>
+          <tbody id="tbodyAgenda"><tr><td colspan="3">Sem compromissos.</td></tr></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- BACKUP / Config -->
+    <section id="tab-config" role="tabpanel" tabindex="0" class="grid">
+      <div class="card">
+        <h2>Backup & Configurações</h2>
+        <div class="btns">
+          <button class="btn primary" type="button" id="btnExportar">Exportar JSON</button>
+          <label class="btn ghost" for="importInput">Importar JSON</label>
+          <input id="importInput" type="file" accept="application/json" style="display:none">
+        </div>
+        <hr style="border:0;border-top:1px dashed rgba(148,163,184,.25);margin:14px 0">
+        <h3 style="margin:0 0 6px 0">IA por Nuvem (opcional)</h3>
+        <p class="muted" style="color:var(--muted);margin:0 0 8px 0">Se desejar, informe uma chave de API OpenAI para análises mais avançadas no navegador. A chave fica salva apenas no seu dispositivo.</p>
+        <label>OpenAI API Key</label>
+        <input type="password" id="apiKey" placeholder="sk-...">
+        <div class="btns"><button class="btn ghost" id="btnSaveKey" type="button">Salvar chave</button><button class="btn ghost" id="btnClearKey" type="button">Limpar chave</button></div>
+      </div>
+    </section>
+  </main>
+
+  <div class="footer">Sistema local – CREAS Municipal de Sousa-PB • Versão 1.3 (com IA Local)</div>
+
+  <script>
+    // ===== Abas responsivas/acessíveis =====
+    const tabButtons=[...document.querySelectorAll('.tab')];
+    const panels=[...document.querySelectorAll('section[role="tabpanel"]')];
+    function activate(tabName,pushHash=true){
+      tabButtons.forEach(b=>{const on=b.dataset.tab===tabName; b.classList.toggle('active',on); b.setAttribute('aria-selected',on)});
+      panels.forEach(p=>p.classList.toggle('active', p.id===`tab-${tabName}`));
+      if(pushHash) location.hash=tabName; const activePanel=document.getElementById(`tab-${tabName}`); activePanel?.focus();
+    }
+    tabButtons.forEach(btn=>{btn.addEventListener('click',()=>activate(btn.dataset.tab));btn.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();activate(btn.dataset.tab)}})});
+    function initFromHash(){const h=(location.hash||'').replace('#',''); activate(['cad','lista','graficos','agenda','config'].includes(h)?h:'cad',false)}
+    window.addEventListener('hashchange',initFromHash); initFromHash();
+
+    // ===== IA Local (Heurística) =====
+    const VIOLACOES=['Violência física','Violência psicológica','Violência sexual','Negligência','Trabalho infantil','Abandono','Idoso – maus-tratos','Pessoa com deficiência – violação','Violência doméstica','Exploração sexual','Racismo/Intolerância','Outras'];
+    const vioWrap=document.getElementById('violacoes');
+    if(vioWrap){vioWrap.innerHTML = VIOLACOES.map((v)=>`<label style="display:inline-flex;gap:8px;align-items:center;margin:4px 8px 0 0"><input type="checkbox" value="${v}"/> ${v}</label>`).join('')}
+
+    const LEXICON={
+      'Violência física':["agress","bater","soco","chute","empurr","les\u00e3o","hematoma","arma","fac\u00e3o","pancada","queimadur"],
+      'Violência psicológica':["amea\u00e7","humil","xinga","intimida","controle","chantag","medo","terror","culpa"],
+      'Violência sexual':["estupro","abuso sexual","constrangimento sexual","toque indesejado","ass\u00e9dio","coito","penetra\u00e7\u00e3o"],
+      'Negligência':["falta de cuidado","sem alimento","sem higiene","abandono de cuidados","omiss\u00e3o","descuido","aus\u00eancia de respons\u00e1vel"],
+      'Trabalho infantil':["trabalhar cedo","vender na rua","explora\u00e7\u00e3o de trabalho","carga hor\u00e1ria","atividade laboral","emprego infantil"],
+      'Abandono':["abandono","desamparo","sozinha(o)","sem moradia","sem familiares"],
+      'Idoso – maus-tratos':["idoso","velhinho","terceira idade","maus-tratos","abandono de idoso"],
+      'Pessoa com deficiência – violação':["defici\u00eancia","pcd","cadeirante","autista","surdo","baixa vis\u00e3o","barreira"],
+      'Violência doméstica':["companheiro","marido","esposa","lar","doméstica","viol\u00eancia no lar"],
+      'Exploração sexual':["explora\u00e7\u00e3o sexual","troca por dinheiro","prostitui\u00e7\u00e3o for\u00e7ada","rede de explora\u00e7\u00e3o"],
+      'Racismo/Intolerância':["racismo","inj\u00faria racial","preconceito","intoler\u00e2ncia","xenofobia","religiosa"],
+      'Outras':["tr\u00e1fico","droga","\u00e1lcool","moradia","fome","sa\u00fade","escola","bullying"]
+    };
+    function normalize(t){return (t||'').toString().toLowerCase().normalize('NFD').replace(/\p{Diacritic}/gu,'')}
+    function score(text){
+      const nt=normalize(text); const res={};
+      Object.entries(LEXICON).forEach(([cat,keys])=>{
+        res[cat]=keys.reduce((acc,k)=> acc + (nt.includes(normalize(k))?1:0),0);
+      });
+      // risco simples
+      const riscoKeys={alto:["arma","fac\u00e3o","amea\u00e7a de morte","estupro","queimadur","fratura"], medio:["amea\u00e7a","les\u00e3o","hematoma","alcool","droga"], baixo:["orienta\u00e7\u00e3o","encaminhamento","acompanhamento"]};
+      let risk='Baixo', pts=0; const ntxt=nt;
+      if(riscoKeys.alto.some(k=>ntxt.includes(normalize(k)))){risk='Alto'; pts=3}
+      else if(riscoKeys.medio.some(k=>ntxt.includes(normalize(k)))){risk='Médio'; pts=2}
+      else if(riscoKeys.baixo.some(k=>ntxt.includes(normalize(k)))){risk='Baixo'; pts=1}
+      return {cats:res, risk, pts};
+    }
+    function suggestSetor(res){
+      if(res.pts>=3 || (res.cats['Violência sexual']>0)) return 'Psicossocial';
+      if(res.cats['Orientação Jurídica']>0) return 'Orientação Jurídica';
+      if(res.cats['Negligência']>0 || res.cats['Abandono']>0) return 'Acolhimento';
+      return 'Psicossocial';
+    }
+
+    const $=s=>document.querySelector(s);
+    const aiModeLbl=$('#aiMode');
+    function hasCloud(){return !!localStorage.getItem('openai_key')}
+    function updateMode(){aiModeLbl.textContent = hasCloud()? 'Nuvem (OpenAI)' : 'Local (heurístico)'}
+    updateMode();
+
+    async function cloudAnalyze(text){
+      const key=localStorage.getItem('openai_key');
+      if(!key) throw new Error('Sem chave');
+      const sys="Você é um assistente de serviço socioassistencial. Classifique o relato em até 3 categorias (entre: Violência física, Violência psicológica, Violência sexual, Negligência, Trabalho infantil, Abandono, Idoso – maus-tratos, Pessoa com deficiência – violação, Violência doméstica, Exploração sexual, Racismo/Intolerância, Outras). Responda JSON com: categorias:[...], risco: Alto|Médio|Baixo, justificativa, palavras_chave:[...], encaminhamentos:[...]";
+      const user=text.slice(0,4000);
+      const resp = await fetch('https://api.openai.com/v1/chat/completions',{
+        method:'POST',
+        headers:{'Content-Type':'application/json','Authorization':`Bearer ${key}`},
+        body:JSON.stringify({model:'gpt-4o-mini',messages:[{role:'system',content:sys},{role:'user',content:user}],temperature:0.1})
+      });
+      const data = await resp.json();
+      const content = data?.choices?.[0]?.message?.content || '{}';
+      return JSON.parse(content);
+    }
+
+    function renderIA(out){
+      const box=$('#iaSugestoes');
+      const cats = (out.categorias||out.top||[]).slice(0,3);
+      box.innerHTML = `
+        <div class="tags">${cats.map(c=>`<span class="tag">${c}</span>`).join('')}</div>
+        <div><span class="risk">Risco:</span> ${out.risco||'—'}</div>
+        ${out.justificativa?`<div style="margin-top:6px;color:var(--muted)"><em>${out.justificativa}</em></div>`:''}
+        ${out.encaminhamentos?`<div style="margin-top:8px"><strong>Encaminhamentos sugeridos:</strong><ul>${out.encaminhamentos.map(e=>`<li>${e}</li>`).join('')}</ul></div>`:''}
+      `;
+      $('#btnIAAplicar').disabled = cats.length===0;
+      $('#btnIAAplicar').dataset.categorias = JSON.stringify(cats);
+    }
+
+    async function runIA(){
+      const texto=$('#relatorio').value.trim();
+      if(!texto){alert('Escreva o relato antes de analisar.'); return}
+      $('#iaSugestoes').innerHTML = 'Analisando…';
+      try{
+        let out;
+        if(hasCloud()){
+          out = await cloudAnalyze(texto);
+          // normaliza campos esperados
+          if(!out.categorias && out.cats){ out.categorias = Object.entries(out.cats).sort((a,b)=>b[1]-a[1]).map(x=>x[0]).slice(0,3) }
+          if(!out.risco) out.risco = out.risk || '—';
+        } else {
+          const sc = score(texto);
+          const ordenadas = Object.entries(sc.cats).sort((a,b)=>b[1]-a[1]).filter(([,v])=>v>0).map(x=>x[0]).slice(0,3);
+          out = {
+            categorias: ordenadas.length? ordenadas: ['Outras'],
+            risco: sc.risk,
+            justificativa: 'Classificação local baseada em palavras-chave e contexto do relato.',
+            encaminhamentos: sc.risk==='Alto'? ['Acionamento imediato da rede de proteção','Avaliar medidas protetivas','Notificação obrigatória'] : sc.risk==='Médio'? ['Acompanhamento psicossocial','Encaminhamento para orientação jurídica'] : ['Acompanhamento e monitoramento']
+          };
+        }
+        renderIA(out);
+      } catch(err){
+        console.error(err);
+        $('#iaSugestoes').innerHTML = '<span style="color:#fca5a5">Falha ao analisar. Verifique a chave de API (se estiver usando nuvem) ou tente novamente.</span>'
+      }
+    }
+
+    document.getElementById('btnIA')?.addEventListener('click', runIA);
+    document.getElementById('btnIAAplicar')?.addEventListener('click',()=>{
+      try{
+        const cats = JSON.parse(document.getElementById('btnIAAplicar').dataset.categorias||'[]');
+        const checks=[...document.querySelectorAll('#violacoes input[type=checkbox]')];
+        checks.forEach(c=>{ if(cats.includes(c.value)) c.checked=true; });
+        alert('Categorias aplicadas ao formulário.');
+      }catch(e){ alert('Nada para aplicar. Rode a análise antes.'); }
+    });
+
+    // ===== Configurar chave OpenAI =====
+    const keyInput=document.getElementById('apiKey'); if(localStorage.getItem('openai_key')) keyInput.value = localStorage.getItem('openai_key');
+    document.getElementById('btnSaveKey')?.addEventListener('click',()=>{localStorage.setItem('openai_key', keyInput.value.trim()); updateMode(); alert('Chave salva localmente.');});
+    document.getElementById('btnClearKey')?.addEventListener('click',()=>{localStorage.removeItem('openai_key'); keyInput.value=''; updateMode(); alert('Chave removida.');});
+
+    // ===== Botões demo =====
+    const $q=s=>document.querySelector(s);
+    $q('#btnSalvar')?.addEventListener('click',()=>{
+      const nome=$q('#nomeUsuario').value.trim(); const prof=$q('#nomeProf').value.trim();
+      if(!nome||!prof){alert('Preencha Usuário(a) e Profissional.'); return}
+      alert('Registro salvo (demonstração).'); activate('lista');
+      const tr=document.createElement('tr'); tr.innerHTML = `<td>${$q('#numProc').value}</td><td>${$q('#dataRegistro').value||'-'}</td><td>${nome}</td><td>${prof}</td>`;
+      const tb=$q('#tbodyRegistros'); if(tb){ if(tb.children.length===1 && tb.children[0].children?.length===1){ tb.innerHTML=''; } tb.appendChild(tr); }
+      const pa=$q('#proxAtend').value; if(pa){ const trA=document.createElement('tr'); trA.innerHTML=`<td>${new Date(pa).toLocaleString('pt-BR')}</td><td>${$q('#numProc').value}</td><td>${nome}</td>`; const tbA=$q('#tbodyAgenda'); if(tbA){ if(tbA.children.length===1 && tbA.children[0].children?.length===1){ tbA.innerHTML=''; } tbA.appendChild(trA); }}
+    });
+    $q('#btnLimpar')?.addEventListener('click',()=>{['#nomeUsuario','#nomeProf','#relatorio','#dataRegistro','#proxAtend'].forEach(s=>$q(s).value=''); document.querySelectorAll('#violacoes input[type=checkbox]').forEach(c=>c.checked=false); alert('Formulário limpo.')});
+    $q('#btnAtualizarLista')?.addEventListener('click',()=>alert('Atualizado (demonstração).'));
+    $q('#btnExportar')?.addEventListener('click',()=>alert('Exportação em breve.'));
+    document.getElementById('importInput')?.addEventListener('change',()=>alert('Importação em breve.'));
+  </script>
+</body>
+</html>
